@@ -102,6 +102,16 @@ file it reads or writes. It also does not inherit your shell's environment
 variables: `process.env` will not contain values you set before running
 `ego-browser`, so write every input directly into the script.
 
+A top-level `import` of a built-in is the case that looks like nothing
+happened: `import { createServer } from "node:http"` produces no output and exits
+0. When a script appears to do nothing at all, check for a static import of a
+built-in and switch it to `await import()`.
+
+Loopback networking is unavailable: `server.listen()` never fires its callback,
+and `fetch("http://127.0.0.1:...")` hangs until the process exits. External
+HTTPS requests work normally. To exercise a local server, run it outside the
+runtime and call it from a plain Node.js process.
+
 Ego-browser deliberately exposes a small custom API. It is not Playwright, even
 where method names and options look similar. Use only the TaskSpace, Page,
 FileChooser, mouse, and keyboard APIs explicitly listed in this Skill. Do not
